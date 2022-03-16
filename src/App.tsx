@@ -1,16 +1,15 @@
-import React from "react";
+import Display from "./modules/Display";
+import Sidebar from "./modules/Sidebar";
+import Toolbar from "./modules/Toolbar";
 
 function App() {
     return (
-        <div className="App">
-            <header className="App-header">
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                    Learn React
-                </a>
-            </header>
+        <div className="h-full w-full">
+            <Toolbar />
+            <Sidebar />
+            <div className="pl-64 pt-12 w-full h-full fixed">
+                <Display />
+            </div>
         </div>
     );
 }
