@@ -8,6 +8,22 @@ import { useStore } from "../store/nodes";
 import { useStore as useUtilsStore } from "../store/utils";
 import { INode } from "../types/index";
 
+/* 
+export interface INode {
+    id: number;
+    posX: number;
+    posY: number;
+    isActive: boolean;
+    connectedTo: number[] | [];
+    domEl: HTMLElement | undefined;
+    updatePos: (pos: number[]) => void;
+    setElement: (el: HTMLElement) => void;
+    addConnection: (to: INode) => void;
+    removeConnection: (node: INode) => void;
+    clearConnections: () => void;
+}
+*/
+
 interface Props {
     node: INode;
     parent: HTMLDivElement | null;
@@ -33,7 +49,7 @@ export default function Node({ node, parent, update }: Props) {
             node.connectedTo.forEach(() => setSize((size) => size + 0.1));
         };
 
-        nodeSize();
+        if (node.connectedTo.length > 1) nodeSize();
     }, [node.connectedTo]);
 
     useEffect(() => {
@@ -76,29 +92,31 @@ export default function Node({ node, parent, update }: Props) {
     };
 
     return (
-        <Draggable
-            disabled={selectedTool === "selector" ? true : false}
-            defaultPosition={currEvent === "click" ? { ...gridMiddle } : { ...cursorPos }}
-            nodeRef={nodeRef}
-            offsetParent={parent && currEvent === "click" ? parent : undefined}
-            onDrag={update}
-            onStop={nodePositionHandler}
-            onMouseDown={drawLineHandler}
-            defaultClassNameDragging="ring"
-        >
-            <div
-                ref={nodeRef}
-                // onDragStart={drawLineHandler}
-                role="radio"
-                draggable="false"
-                aria-checked={selectedNode ? true : false}
-                tabIndex={0}
-                id={`node__${node.id}`}
-                style={{ width: `${size}rem`, height: `${size}rem` }}
-                className={`select-none absolute transition-[height,width] z-10 w-10 h-10 bg-gray-200 border-4 border-black rounded-full
+        <>
+            <Draggable
+                disabled={selectedTool === "selector" ? true : false}
+                defaultPosition={currEvent === "click" ? { ...gridMiddle } : { ...cursorPos }}
+                nodeRef={nodeRef}
+                offsetParent={parent && currEvent === "click" ? parent : undefined}
+                onDrag={update}
+                onStop={nodePositionHandler}
+                onMouseDown={drawLineHandler}
+                defaultClassNameDragging="ring will-change-transform"
+            >
+                <div
+                    ref={nodeRef}
+                    // onDragStart={drawLineHandler}
+                    role="radio"
+                    draggable="false"
+                    aria-checked={selectedNode ? true : false}
+                    tabIndex={0}
+                    id={`node__${node.id}`}
+                    style={{ width: `${size}rem`, height: `${size}rem` }}
+                    className={`select-none absolute transition-[height,width] z-10 w-10 h-10 bg-gray-200 border-4 border-black rounded-full
                     ${selectedTool === "grab" ? "cursor-grab active:cursor-grabbing" : "hover:ring"}
                     ${selectedNode?.id === node.id ? "ring ring-red-700" : ""}`}
-            />
-        </Draggable>
+                />
+            </Draggable>
+        </>
     );
 }

@@ -5,6 +5,7 @@ interface Props {
     classNames?: string;
     draggable?: boolean;
     id?: string;
+    title?: string;
     onClick?: () => void;
     onDragStart?: () => void;
     onDragEnd?: () => void;
