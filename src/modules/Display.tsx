@@ -46,7 +46,7 @@ export default function Display() {
                 {shouldDrawGrid && <Grid />}
 
                 <Xwrapper>
-                    {nodes.map((node: INode) => (
+                    {nodes.slice(0, 100).map((node: INode) => (
                         <React.Fragment key={node.id}>
                             <Node node={node} parent={displayHandler?.current} update={updateXarrow} />
 

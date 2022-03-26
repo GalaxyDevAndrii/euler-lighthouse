@@ -66,4 +66,9 @@ export interface IUtilsState {
 
     lineActive: boolean;
     setLineActive: (state: boolean) => void;
+
+    sidebarExpanded: boolean;
+    toggleSidebar: () => void;
 }
+
+export type SidebarViews = "SidebarView" | "SettingsView" | "AboutView";

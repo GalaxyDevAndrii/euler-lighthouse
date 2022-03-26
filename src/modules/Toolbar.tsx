@@ -8,11 +8,15 @@ import { useStore } from "../store/nodes";
 import { useStore as useUtilsStore } from "../store/utils";
 
 export default function Toolbar() {
-    const { selectedTool, setTool } = useUtilsStore((state) => state);
+    const { selectedTool, setTool, sidebarExpanded } = useUtilsStore((state) => state);
     const clearNodes = useStore((state) => state.clearNodes);
 
     return (
-        <header className="fixed select-none w-[calc(100%-16rem)] top-0 right-0 h-12 z-10 flex items-center space-x-4">
+        <header
+            className={`fixed select-none top-0 right-0 h-12 z-10 flex items-center space-x-4 transition-[width] ${
+                sidebarExpanded ? "w-[calc(100%-16rem)]" : "w-[calc(100%-4rem)]"
+            }`}
+        >
             <RadioGroup className="flex items-center border rounded-md overflow-hidden" value={selectedTool} onChange={setTool}>
                 <RadioGroup.Option value="selector">
                     {({ checked }) => (

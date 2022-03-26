@@ -19,4 +19,7 @@ export const useStore = create<IUtilsState>((set: SetState<IUtilsState>) => ({
 
     lineActive: false,
     setLineActive: (state: boolean) => set({ lineActive: state }),
+
+    sidebarExpanded: true,
+    toggleSidebar: () => set((state) => set({ sidebarExpanded: !state.sidebarExpanded })),
 }));

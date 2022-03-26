@@ -54,8 +54,10 @@ export default function Node({ node, parent, update }: Props) {
 
     useEffect(() => {
         if (clickedOutside) {
-            selectNode(undefined);
-            setLineActive(false);
+            setTimeout(() => {
+                selectNode(undefined);
+                setLineActive(false);
+            }, 200);
         }
     }, [clickedOutside, selectNode, setLineActive]);
 
