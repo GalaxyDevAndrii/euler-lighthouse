@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { ReactComponent as AboutSvg } from "../assets/about.svg";
 import { ReactComponent as GithubSvg } from "../assets/github.svg";
+import { ReactComponent as SettingsSvg } from "../assets/settings.svg";
 import Patterns from "../components/Patterns";
 import SelectMenu from "../components/SelectMenu";
 import UtilsBtn from "../components/UtilsBtn";
@@ -63,16 +64,21 @@ export default function Sidebar() {
         </div>
     );
 
-    const SettingsBtn = () => <button className="bg-black/10 text-sm px-4 py-1.5 rounded-md">Settings</button>;
+    const SettingsBtn = () => (
+        <UtilsBtn classNames="w-min text-sm px-4 py-2 rounded-md flex flex-row items-center justify-center space-x-1.5">
+            <SettingsSvg />
+            <span>Settings</span>
+        </UtilsBtn>
+    );
 
     const Info = () => (
         <div className="flex flex-row items-center justify-between space-x-6">
-            <button className="flex flex-row items-center justify-center space-x-1 hover:underline">
+            <button className="flex flex-row items-center justify-center space-x-1.5 hover:underline">
                 <AboutSvg />
                 <span>About</span>
             </button>
             <a
-                className="flex flex-row items-center justify-center space-x-1 hover:underline"
+                className="flex flex-row items-center justify-center space-x-1.5 hover:underline"
                 href="https://github.com/rortan134/euler-lighthouse"
                 target="_blank"
                 rel="noreferrer"

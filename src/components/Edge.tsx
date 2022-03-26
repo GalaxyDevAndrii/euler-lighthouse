@@ -17,5 +17,5 @@ export default function Edge({ from, to, existingPairings }: Edge) {
 
     existingPairings.add(from + to);
 
-    return <Xarrow start={from} end={to} color="black" endAnchor="middle" showHead={false} strokeWidth={7} curveness={0} />;
+    return <Xarrow start={from} end={to} path="straight" color="black" startAnchor="middle" endAnchor="middle" showHead={false} strokeWidth={7} />;
 }
