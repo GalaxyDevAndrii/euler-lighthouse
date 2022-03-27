@@ -18,7 +18,7 @@ class Node implements INode {
     public posX: number;
     public posY: number;
     public isActive: boolean;
-    public connectedTo: number[] | [];
+    public connectedTo: number[];
     public domEl: HTMLElement | undefined;
 
     constructor(nodes: Nodes) {
@@ -59,6 +59,8 @@ export const createNode: CreateNode = (nodes: Nodes): INode => {
 
 export const connectNodes: ConnectNodes = (node1, node2) => {
     if (!node1 || !node2) throw new Error("Invalid nodes provided.");
+
+    if (node1.connectedTo.includes(node2.id) || node2.connectedTo.includes(node1.id)) return;
 
     node2.addConnection(node1);
     node1.addConnection(node2);

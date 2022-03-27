@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { toast } from "react-toastify";
 
 import { ReactComponent as AboutSvg } from "../../assets/about.svg";
 import { ReactComponent as GithubSvg } from "../../assets/github.svg";
@@ -10,21 +10,25 @@ import Patterns from "../Patterns";
 import SelectMenu from "../SelectMenu";
 import UtilsBtn from "../UtilsBtn";
 
+import "react-toastify/dist/ReactToastify.css";
+
 export default function SidebarView({ setActiveView }: { setActiveView: any }) {
     const { addNode, removeNode, selectedNode } = useStore((state) => state);
     const { setCurrEvent } = useUtilsStore((state) => state);
-    const [warning, setWarning] = useState(false);
 
     const handleRemove = (selectedNode?: INode) => {
         if (selectedNode) {
             removeNode(selectedNode.id);
-            setWarning(false);
         } else {
-            setWarning(true);
-
-            setTimeout(() => {
-                setWarning(false); // close warning after 3s
-            }, 3000);
+            toast.error("Select a node to be removed.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
     };
 
@@ -52,8 +56,6 @@ export default function SidebarView({ setActiveView }: { setActiveView: any }) {
             <UtilsBtn classNames="py-4" onClick={() => handleRemove(selectedNode)}>
                 Remove Node
             </UtilsBtn>
-
-            <span className={`text-sm text-red-600 mt-2 transition ${warning ? "" : "opacity-0"}`}>Select a node to be removed</span>
         </div>
     );
 

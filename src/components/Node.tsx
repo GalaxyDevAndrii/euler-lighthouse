@@ -32,11 +32,11 @@ interface Props {
 
 export default function Node({ node, parent, update }: Props) {
     const { getNode, selectedNode, selectNode } = useStore((state) => state);
-    const { currEvent, gridMiddle, selectedTool, lineActive, setLineActive } = useUtilsStore((state) => state);
+    const { currEvent, gridMiddle, selectedTool, lineActive, setLineActive, sidebarRef } = useUtilsStore((state) => state);
 
     const nodeRef = useRef(null);
     const cursorPos = useCursorPosition();
-    const clickedOutside = useExternalClick(nodeRef);
+    const clickedOutside = useExternalClick(nodeRef, sidebarRef);
 
     const [size, setSize] = useState(2.5);
 
@@ -54,10 +54,8 @@ export default function Node({ node, parent, update }: Props) {
 
     useEffect(() => {
         if (clickedOutside) {
-            setTimeout(() => {
-                selectNode(undefined);
-                setLineActive(false);
-            }, 200);
+            selectNode(undefined);
+            setLineActive(false);
         }
     }, [clickedOutside, selectNode, setLineActive]);
 

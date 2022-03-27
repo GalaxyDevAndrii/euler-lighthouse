@@ -1,3 +1,5 @@
+import { RefObject } from "react";
+
 export interface ICursorPos {
     x?: number;
     y?: number;
@@ -8,10 +10,12 @@ export interface INode {
     posX: number;
     posY: number;
     isActive: boolean;
-    connectedTo: number[] | [];
+    connectedTo: number[];
     domEl: HTMLElement | undefined;
+
     updatePos: (pos: number[]) => void;
     setElement: (el: HTMLElement) => void;
+
     addConnection: (to: INode) => void;
     removeConnection: (node: INode) => void;
     clearConnections: () => void;
@@ -21,10 +25,12 @@ type Nodes = INode[] | [];
 
 export interface INodeState {
     nodes: Nodes;
+
     addNode: () => void;
     getNode: (nodeId: number) => INode;
     removeNode: (nodeId: number) => void;
     clearNodes: () => void;
+
     selectedNode: INode | undefined;
     selectNode: (el: INode | undefined) => void;
 }
@@ -69,6 +75,9 @@ export interface IUtilsState {
 
     sidebarExpanded: boolean;
     toggleSidebar: () => void;
+
+    sidebarRef: RefObject<HTMLElement> | undefined;
+    setSidebarRef: (ref: RefObject<HTMLElement>) => void;
 }
 
 export type SidebarViews = "SidebarView" | "SettingsView" | "AboutView";

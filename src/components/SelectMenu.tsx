@@ -16,12 +16,12 @@ export default function SelectMenu() {
                         <h3 className="text-base font-medium">Algorithm</h3>
                         <p className="text-sm text-gray-500">Select an Eulerian Algorithm</p>
                     </div>
-                    <Listbox.Button className="group relative flex flex-row justify-between items-center w-full py-2 px-3 text-left bg-white border border-gray-300 rounded shadow-sm cursor-default focus:border-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-contrast focus-visible:ring-offset-2 focus-visible:border-contrast sm:text-sm">
+                    <Listbox.Button className="group text-sm relative flex flex-row justify-between items-center w-full py-2 px-3 text-left bg-white border border-gray-300 rounded shadow-sm cursor-default focus:border-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-contrast focus-visible:ring-offset-2 focus-visible:border-contrast">
                         <span className="truncate">{selected}</span>
                         <DownArrow className="pointer-events-none transition fill-gray-500 group-hover:fill-black" />
                     </Listbox.Button>
                     <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-                        <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-white rounded shadow-sm max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        <Listbox.Options className="text-sm absolute w-full py-1 mt-1 overflow-auto bg-white rounded shadow-sm max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none">
                             {Object.values(Algorithms).map((algorithm: string, index: number) => (
                                 <Listbox.Option
                                     key={index}

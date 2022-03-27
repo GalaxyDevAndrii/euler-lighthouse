@@ -6,7 +6,7 @@ export function useExternalClick(ref: RefObject<HTMLElement>, secRef?: RefObject
     useEffect(() => {
         // Alert if clicked on outside of element
         function handleClickOutside(event: any) {
-            if ((ref.current && !ref.current.contains(event.target)) || (secRef?.current && !secRef?.current.contains(event.target))) {
+            if (ref.current && !ref.current.contains(event.target) && secRef?.current && !secRef?.current.contains(event.target)) {
                 setClickedOutside(true);
             } else setClickedOutside(false);
         }

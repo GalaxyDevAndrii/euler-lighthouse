@@ -22,4 +22,7 @@ export const useStore = create<IUtilsState>((set: SetState<IUtilsState>) => ({
 
     sidebarExpanded: true,
     toggleSidebar: () => set((state) => set({ sidebarExpanded: !state.sidebarExpanded })),
+
+    sidebarRef: undefined,
+    setSidebarRef: (ref) => set({ sidebarRef: ref }),
 }));
