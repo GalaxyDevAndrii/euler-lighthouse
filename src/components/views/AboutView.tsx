@@ -1,6 +1,7 @@
+import { SidebarViews } from "../../types";
 import UtilsBtn from "../UtilsBtn";
 
-export default function AboutView({ setActiveView }: { setActiveView: any }) {
+export default function AboutView({ setActiveView }: { setActiveView: React.Dispatch<React.SetStateAction<SidebarViews>> }) {
     return (
         <div className="w-full flex flex-col items-center">
             <UtilsBtn
