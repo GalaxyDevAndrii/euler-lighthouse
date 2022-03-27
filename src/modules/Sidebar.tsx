@@ -10,13 +10,13 @@ import { useStore as useUtilsStore } from "../store/utils";
 import { SidebarViews } from "../types";
 
 export default function Sidebar() {
-    const { setLineActive, sidebarExpanded, toggleSidebar, setSidebarRef } = useUtilsStore((state) => state);
+    const { lineActive, setLineActive, sidebarExpanded, toggleSidebar, setSidebarRef } = useUtilsStore((state) => state);
     const [activeView, setActiveView] = useState<SidebarViews>("SidebarView");
     const sidebarRef = useRef(null);
 
     useEffect(() => {
         if (sidebarRef.current) setSidebarRef(sidebarRef);
-    }, [setSidebarRef, sidebarRef]);
+    }, [setSidebarRef]);
 
     const ExpandComponent = () => (
         <button onClick={toggleSidebar} className="fixed top-0 left-0 m-1.5 p-2 rounded-full transition active:bg-gray-100">
@@ -27,9 +27,11 @@ export default function Sidebar() {
     return (
         <aside
             ref={sidebarRef}
-            onMouseEnter={() => setLineActive(false)}
+            onMouseEnter={() => {
+                if (lineActive) setLineActive(false);
+            }}
             className="fixed transition-[left] top-0 left-0 select-none h-full w-64 px-4 pb-10 pt-14 flex flex-col items-center justify-between z-20 bg-white"
-            style={!sidebarExpanded ? { left: "-255px" } : {}}
+            style={!sidebarExpanded ? { left: "-250px" } : {}}
         >
             <ExpandComponent />
             <SwitchViews active={activeView}>

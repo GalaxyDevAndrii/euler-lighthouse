@@ -1,9 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 
 import useWindowSize from "../hooks/useWindowResize";
 import { useStore } from "../store/utils";
 
-export default function Grid() {
+function GridV() {
     const setMiddle = useStore((state) => state.setMiddle);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -80,3 +80,7 @@ export default function Grid() {
 
     return <canvas ref={canvasRef} className="relative w-full h-full block"></canvas>;
 }
+
+const Grid = memo(GridV);
+
+export default Grid;

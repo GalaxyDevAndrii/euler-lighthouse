@@ -5,6 +5,8 @@ import Sidebar from "./modules/Sidebar";
 import Toolbar from "./modules/Toolbar";
 import { useStore } from "./store/utils";
 
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
     const { sidebarExpanded } = useStore((state) => state);
 
