@@ -17,4 +17,7 @@ export const useStore = create<IAlgorithmState>((set: SetState<IAlgorithmState>)
             progress: undefined,
         });
     },
+
+    isActive: false,
+    initialize: () => set({ isActive: true }),
 }));

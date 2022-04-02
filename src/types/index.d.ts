@@ -53,6 +53,9 @@ export type AlgorithmsT = Algorithms.tour | Algorithms.walk;
 export interface IAlgorithmState {
     selected: AlgorithmsT;
     setSelected: (selected: AlgorithmsT) => void;
+
+    isActive: boolean;
+    initialize: () => void;
 }
 
 export type Directions = "x" | "y";

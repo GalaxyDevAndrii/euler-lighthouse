@@ -92,31 +92,30 @@ export default function Node({ node, parent, update }: Props) {
     };
 
     return (
-        <>
-            <Draggable
-                disabled={selectedTool === "selector" ? true : false}
-                defaultPosition={currEvent === "click" ? { ...gridMiddle } : { ...cursorPos }}
-                nodeRef={nodeRef}
-                offsetParent={parent && currEvent === "click" ? parent : undefined}
-                onDrag={update}
-                onStop={nodePositionHandler}
-                onMouseDown={drawLineHandler}
-                defaultClassNameDragging="ring will-change-transform"
-            >
-                <div
-                    ref={nodeRef}
-                    // onDragStart={drawLineHandler}
-                    role="radio"
-                    draggable="false"
-                    aria-checked={selectedNode ? true : false}
-                    tabIndex={0}
-                    id={`node__${node.id}`}
-                    style={{ width: `${size}rem`, height: `${size}rem` }}
-                    className={`select-none absolute transition-[height,width] z-10 w-10 h-10 bg-gray-200 border-4 border-black rounded-full
+        <Draggable
+            disabled={selectedTool === "selector" ? true : false}
+            defaultPosition={currEvent === "click" ? { ...gridMiddle } : { ...cursorPos }}
+            nodeRef={nodeRef}
+            offsetParent={parent && currEvent === "click" ? parent : undefined}
+            onDrag={update}
+            onStop={nodePositionHandler}
+            onMouseDown={drawLineHandler}
+            defaultClassNameDragging="ring will-change-transform"
+            bounds="parent"
+        >
+            <div
+                ref={nodeRef}
+                // onDragStart={drawLineHandler}
+                role="radio"
+                draggable="false"
+                aria-checked={selectedNode ? true : false}
+                tabIndex={0}
+                id={`node__${node.id}`}
+                style={{ width: `${size}rem`, height: `${size}rem` }}
+                className={`select-none absolute transition-[height,width] z-10 w-10 h-10 bg-gray-200 border-4 border-black rounded-full
                     ${selectedTool === "grab" ? "cursor-grab active:cursor-grabbing" : "hover:ring"}
                     ${selectedNode?.id === node.id ? "ring ring-red-700" : ""}`}
-                />
-            </Draggable>
-        </>
+            />
+        </Draggable>
     );
 }
