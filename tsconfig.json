@@ -18,9 +18,10 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "types": ["react/next"]
     },
-    "include": ["src", "src/types/index.d.ts"],
+    "include": ["src"],
     "exclude": ["node_modules"],
     "extends": "./tsconfig.paths.json"
 }
