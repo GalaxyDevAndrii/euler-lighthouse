@@ -1,9 +1,36 @@
-import { RefObject } from "react";
-
-export interface ICursorPos {
-    x?: number;
-    y?: number;
+export enum Algorithms {
+    tour = "Euler Tour",
+    walk = "Euler Walk",
+    trail = "Euler Trail",
 }
+
+export const NodeTypesArr = ["Initial", "Final", "Normal"] as const;
+
+export type AlgorithmsT = Algorithms.tour | Algorithms.walk;
+
+export type NodeTypes = typeof NodeTypesArr[number];
+
+export type Point = { x: number; y: number };
+
+export type Nodes = INode[] | [];
+
+export type CurrentEvent = "click" | "drag" | undefined;
+
+export type Tools = "selector" | "grab";
+
+export type CreateNode = (nodes: Nodes) => INode;
+
+export type ConnectNodes = (node1: INode | undefined, node2: INode | undefined) => void;
+
+export type Directions = "x" | "y";
+
+export type SidebarViews = "SidebarView" | "SettingsView" | "AboutView";
+
+export type DraggableEvent =
+    | React.MouseEvent<HTMLElement | SVGElement>
+    | React.TouchEvent<HTMLElement | SVGElement>
+    | MouseEvent
+    | TouchEvent;
 
 export interface INode {
     id: number;
@@ -12,75 +39,15 @@ export interface INode {
     isActive: boolean;
     connectedTo: number[];
     domEl: HTMLElement | undefined;
+    type: NodeTypes;
 
     updatePos: (pos: number[]) => void;
     setElement: (el: HTMLElement) => void;
 
     addConnection: (to: INode) => void;
-    removeConnection: (node: INode) => void;
+    removeConnection: (nodeId: number) => void;
     clearConnections: () => void;
+
+    changeType: () => NodeTypes;
+    animate: (animation: any, options: any) => void;
 }
-
-type Nodes = INode[] | [];
-
-export interface INodeState {
-    nodes: Nodes;
-
-    addNode: () => void;
-    getNode: (nodeId: number) => INode;
-    removeNode: (nodeId: number) => void;
-    clearNodes: () => void;
-
-    selectedNode: INode | undefined;
-    selectNode: (el: INode | undefined) => void;
-}
-
-type CurrentEvent = "click" | "drag" | undefined;
-
-export type Tools = "selector" | "grab";
-
-export type CreateNode = (nodes: Nodes) => INode;
-
-export type ConnectNodes = (node1: INode | undefined, node2: INode | undefined) => void;
-
-export enum Algorithms {
-    tour = "Euler Tour",
-    walk = "Euler Walk",
-}
-
-export type AlgorithmsT = Algorithms.tour | Algorithms.walk;
-
-export interface IAlgorithmState {
-    selected: AlgorithmsT;
-    setSelected: (selected: AlgorithmsT) => void;
-
-    isActive: boolean;
-    initialize: () => void;
-}
-
-export type Directions = "x" | "y";
-
-export interface IUtilsState {
-    shouldDrawGrid: boolean;
-    setDrawGrid: (newState: boolean) => void;
-
-    gridMiddle: { x: number; y: number };
-    setMiddle: (direction: Directions, newState: number) => void;
-
-    currEvent: CurrentEvent;
-    setCurrEvent: (event: CurrentEvent) => void;
-
-    selectedTool: Tools;
-    setTool: (tool: Tools) => void;
-
-    lineActive: boolean;
-    setLineActive: (state: boolean) => void;
-
-    sidebarExpanded: boolean;
-    toggleSidebar: () => void;
-
-    sidebarRef: RefObject<HTMLElement> | undefined;
-    setSidebarRef: (ref: RefObject<HTMLElement>) => void;
-}
-
-export type SidebarViews = "SidebarView" | "SettingsView" | "AboutView";
