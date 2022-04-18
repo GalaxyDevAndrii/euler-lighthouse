@@ -36,7 +36,7 @@ export default function Sidebar() {
         </div>
     );
 
-    const ColapseComponent = () => (
+    const CollapseComponent = () => (
         <button
             onClick={toggleSidebar}
             className="fixed top-0 left-0 m-1.5 p-2 rounded-full transition active:bg-gray-100 dark:active:bg-lightDark z-30"
@@ -85,7 +85,7 @@ export default function Sidebar() {
             style={sidebarExpanded ? {} : { left: "-256px" }}
         >
             {isAtSidebar && <DeleteOverlay />}
-            <ColapseComponent />
+            <CollapseComponent />
             <div className="flex flex-col h-full w-full pt-14 relative">
                 <SimpleBar className="overflow-x-hidden h-full">
                     <div className="relative h-full w-full pr-5 pl-3 space-y-7">
