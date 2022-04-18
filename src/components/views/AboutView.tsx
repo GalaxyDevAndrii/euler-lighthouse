@@ -13,8 +13,9 @@ export default function AboutView({ setActiveView }: { setActiveView: React.Disp
             <div>
                 <h3 className="text-base mb-2 font-medium">About</h3>
                 <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit accusamus exercitationem neque, ipsum minus iusto. Lorem ipsum
-                    dolor sit amet consectetur adipisicing elit. Eum minus blanditiis officia quis voluptates iure cumque id dolorem, rem voluptas.
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Impedit accusamus exercitationem neque, ipsum minus iusto.
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum minus blanditiis officia quis voluptates iure cumque id
+                    dolorem, rem voluptas.
                 </p>
                 <span className="font-semibold">Made by Rortan</span>
             </div>
