@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { createTrackedSelector } from "react-tracked";
 import create, { SetState, GetState, State } from "zustand";
 
+import { DELAY_BETWEEN_NODE_DELETE } from "../config";
 import { createNode } from "../features/nodeHandler";
 import { INode, Nodes } from "../types";
 
@@ -53,9 +54,11 @@ export const useStore = create<INodeState>((set: SetState<INodeState>, get: GetS
     clearNodes: () => {
         const nodes = get().nodes;
         if (nodes.length === 0) return;
+
         useUtilsStore.getState().setIsAtSidebar(false);
 
-        const time = nodes.length <= 3 ? 1000 : nodes.length * 150;
+        const animOffset = 200;
+        const time = nodes.length <= 3 ? 1000 : nodes.length * DELAY_BETWEEN_NODE_DELETE;
 
         nodes.forEach((node, i) => {
             node.clearConnections();
@@ -75,7 +78,7 @@ export const useStore = create<INodeState>((set: SetState<INodeState>, get: GetS
                 node.animate(
                     [
                         { transform: `translate(${correctPos[0]}px, ${correctPos[1]}px)` },
-                        { transform: `translate(${correctPos[0]}px, ${correctPos[1] - 200}px)`, opacity: "0" },
+                        { transform: `translate(${correctPos[0]}px, ${correctPos[1] - animOffset}px)`, opacity: "0" },
                     ],
                     {
                         duration: 500,
@@ -83,7 +86,7 @@ export const useStore = create<INodeState>((set: SetState<INodeState>, get: GetS
                         fill: "forwards",
                     }
                 );
-            }, 130 * i + 1);
+            }, DELAY_BETWEEN_NODE_DELETE * i + 1);
         });
 
         setTimeout(() => {

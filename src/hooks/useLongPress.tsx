@@ -25,7 +25,7 @@ export default function useLongPress({ element, callback }: Props) {
             timer = setTimeout(() => {
                 timer = null;
                 callback();
-            }, 500);
+            }, 500); // hold for longer than 500ms
         });
 
         function cancel() {

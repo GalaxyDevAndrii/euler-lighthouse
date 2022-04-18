@@ -1,5 +1,6 @@
 import { RefObject, useState, useCallback, TouchEvent as SyntheticTouchEvent } from "react";
 
+import { MIN_ZOOM_SCALE, MAX_ZOOM_SCALE } from "../config";
 import { between } from "../utils/math";
 import { isTouchEvent, getPointFromTouch, getDistanceBetweenPoints } from "../utils/tracking";
 
@@ -9,9 +10,6 @@ type ScaleOpts = {
     direction: "up" | "down";
     interval: number;
 };
-
-const MIN_SCALE = 0.5;
-const MAX_SCALE = 3;
 
 /**
  * scroll & touch zoom.
@@ -25,14 +23,14 @@ export default function useZoom(ref: RefObject<HTMLElement | null>) {
             let scale: number;
 
             // Adjust up to or down to the maximum or minimum scale levels by `interval`.
-            if (direction === "up" && currentScale + interval < MAX_SCALE) {
+            if (direction === "up" && currentScale + interval < MAX_ZOOM_SCALE) {
                 scale = currentScale + interval;
             } else if (direction === "up") {
-                scale = MAX_SCALE;
-            } else if (direction === "down" && currentScale - interval > MIN_SCALE) {
+                scale = MAX_ZOOM_SCALE;
+            } else if (direction === "down" && currentScale - interval > MIN_ZOOM_SCALE) {
                 scale = currentScale - interval;
             } else if (direction === "down") {
-                scale = MIN_SCALE;
+                scale = MIN_ZOOM_SCALE;
             } else {
                 scale = currentScale;
             }
@@ -62,7 +60,7 @@ export default function useZoom(ref: RefObject<HTMLElement | null>) {
                 if (pointA && pointB) {
                     const distance = getDistanceBetweenPoints(pointA, pointB);
 
-                    setScale((currentScale) => between(MIN_SCALE, MAX_SCALE, currentScale * (distance / lastDistance)));
+                    setScale((currentScale) => between(MIN_ZOOM_SCALE, MAX_ZOOM_SCALE, currentScale * (distance / lastDistance)));
                     setLastDistance(distance);
                 }
             }

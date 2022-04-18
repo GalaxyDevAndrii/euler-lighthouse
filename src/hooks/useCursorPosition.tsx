@@ -1,5 +1,6 @@
 import { RefObject, useEffect, useState } from "react";
 
+import { ORIGIN } from "../config";
 import { DraggableEvent } from "../types";
 
 /**
@@ -7,7 +8,7 @@ import { DraggableEvent } from "../types";
  */
 
 export function useCursorPosition(ref?: RefObject<HTMLElement> | null, offset?: { x: number; y: number }): { x: number; y: number } {
-    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [position, setPosition] = useState(ORIGIN);
 
     useEffect(() => {
         const setFromEvent = (e: DraggableEvent) => {

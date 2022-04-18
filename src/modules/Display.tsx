@@ -6,6 +6,7 @@ import { Xwrapper } from "react-xarrows";
 import Edge from "../components/Edge";
 import GhostNode from "../components/GhostNode";
 import Node from "../components/Node";
+import { NODE_LIMIT } from "../config";
 import { useStore } from "../store/nodes";
 import { useTrackedStore as useTrackedUtils } from "../store/utils";
 import { INode } from "../types";
@@ -24,7 +25,7 @@ export default function Display() {
             displayHandler.current.addEventListener("contextmenu", (event) => event.preventDefault());
         }
 
-        if (nodes.length >= 100) {
+        if (nodes.length >= NODE_LIMIT) {
             toast.error("You have reached the maximum number of nodes.", {
                 position: "top-right",
                 autoClose: 5000,
@@ -74,7 +75,7 @@ export default function Display() {
                 <Canvas />
 
                 <Xwrapper>
-                    {nodes.slice(0, 100).map((node: INode) => (
+                    {nodes.slice(0, NODE_LIMIT).map((node: INode) => (
                         <Fragment key={node.id}>
                             <Node node={node} />
 

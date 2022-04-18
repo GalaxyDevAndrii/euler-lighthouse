@@ -1,8 +1,7 @@
 import { createTrackedSelector } from "react-tracked";
 import create, { SetState, State } from "zustand";
 
-const ORIGIN = Object.freeze({ x: 0, y: 0 });
-
+import { ORIGIN } from "../config";
 import { Point } from "../types";
 
 interface ITrackingState extends State {

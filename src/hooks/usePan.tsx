@@ -1,9 +1,8 @@
 import { MouseEvent as SyntheticMouseEvent, TouchEvent as SyntheticTouchEvent, RefObject, useCallback, useRef, useState } from "react";
 
+import { ORIGIN } from "../config";
 import { Point } from "../types";
 import { isTouchEvent, getDelta } from "../utils/tracking";
-
-const ORIGIN = Object.freeze({ x: 0, y: 0 });
 
 type eventP = (e: MouseEvent | TouchEvent) => void;
 
