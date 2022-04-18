@@ -49,5 +49,5 @@ export interface INode {
     clearConnections: () => void;
 
     changeType: () => NodeTypes;
-    animate: (animation: any, options: any) => void;
+    animate: (animation: Keyframe[] | PropertyIndexedKeyframes, options: number | KeyframeAnimationOptions) => void;
 }
