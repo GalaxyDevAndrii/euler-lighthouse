@@ -1,16 +1,38 @@
-import { useEffect, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 
-export const useCursorPosition = () => {
+import { DraggableEvent } from "../types";
+
+/**
+ * Cursor coordinates
+ */
+
+export function useCursorPosition(ref?: RefObject<HTMLElement> | null, offset?: { x: number; y: number }): { x: number; y: number } {
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
-        const setFromEvent = (e: { pageX: number; pageY: number }) => setPosition({ x: e.pageX, y: e.pageY });
-        window.addEventListener("mousemove", setFromEvent);
+        const setFromEvent = (e: DraggableEvent) => {
+            if (e instanceof MouseEvent) {
+                setPosition({ x: e.clientX - (offset?.x ?? 0), y: e.clientY - (offset?.y ?? 0) });
+            } else if (e instanceof TouchEvent) {
+                setPosition({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+            }
+        };
+
+        let refStore: RefObject<HTMLElement> | null = null;
+
+        if (ref?.current) {
+            ref.current.addEventListener("mousemove", setFromEvent);
+            refStore = ref;
+        } else window.addEventListener("mousemove", setFromEvent);
 
         return () => {
-            window.removeEventListener("mousemove", setFromEvent);
+            if (refStore?.current) {
+                refStore.current.removeEventListener("mousemove", setFromEvent);
+            } else {
+                window.removeEventListener("mousemove", setFromEvent);
+            }
         };
-    }, []);
+    }, [offset?.x, offset?.y, ref]);
 
     return position;
-};
+}
