@@ -1,14 +1,19 @@
+import { useEffect } from "react";
 import { Slide, ToastContainer } from "react-toastify";
 
-import Display from "./modules/Display";
-import Sidebar from "./modules/Sidebar";
-import Toolbar from "./modules/Toolbar";
-import { useStore } from "./store/utils";
-
-import "react-toastify/dist/ReactToastify.css";
+import Tooltips from "./components/Tooltips";
+import Layout from "./modules/Layout";
+import { useStore as useSettingsStore } from "./store/settings";
 
 function App() {
-    const { sidebarExpanded } = useStore((state) => state);
+    const darkMode = useSettingsStore((state) => state.darkMode);
+
+    useEffect(() => {
+        if (localStorage.theme === "dark" || (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            localStorage.setItem("theme", "dark");
+            document.documentElement.classList.add("dark");
+        }
+    }, []);
 
     return (
         <div className="h-full w-full">
@@ -22,12 +27,10 @@ function App() {
                 pauseOnFocusLoss
                 draggable
                 transition={Slide}
+                theme={darkMode ? "dark" : "light"}
             />
-            <Toolbar />
-            <Sidebar />
-            <div className={`${sidebarExpanded ? "pl-64" : "pl-0"} transition-[padding] pt-12 w-full h-full fixed`}>
-                <Display />
-            </div>
+            <Tooltips />
+            <Layout />
         </div>
     );
 }
