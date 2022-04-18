@@ -1,5 +1,8 @@
 import Xarrow from "react-xarrows";
 
+import { useStore as useSettingsStore } from "../store/settings";
+import { useTrackedStore } from "../store/tracking";
+
 interface Edge {
     from: string;
     to: string;
@@ -7,6 +10,9 @@ interface Edge {
 }
 
 export default function Edge({ from, to, existingPairings }: Edge) {
+    const darkMode = useSettingsStore((state) => state.darkMode);
+    const { cameraZoom } = useTrackedStore();
+
     if (!from || !to) {
         return null;
     }
@@ -17,5 +23,16 @@ export default function Edge({ from, to, existingPairings }: Edge) {
 
     existingPairings.add(from + to);
 
-    return <Xarrow start={from} end={to} path="straight" color="black" startAnchor="middle" endAnchor="middle" showHead={false} strokeWidth={7} />;
+    return (
+        <Xarrow
+            start={from}
+            end={to}
+            path="straight"
+            color={darkMode ? "#fff" : "#000"}
+            startAnchor="middle"
+            endAnchor="middle"
+            showHead={false}
+            strokeWidth={7 * cameraZoom}
+        />
+    );
 }

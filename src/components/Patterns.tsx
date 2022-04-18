@@ -8,14 +8,14 @@ interface previewProps {
 
 export default function Patterns() {
     const Preview = ({ img }: previewProps) => (
-        <div className="m-2 border-2 border-black ring-4 ring-white rounded">
-            <img src={img} alt="Preview" />
+        <div className="border-2 border-black dark:border-lightGray bg-transparent rounded-md">
+            <img className="rounded-md" src={img} alt="Preview" />
         </div>
     );
 
     return (
         <div>
-            <h3 className="text-base mb-2 font-medium">Common Patterns</h3>
+            <h3 className="text-base mb-2 font-medium dark:text-white">Common Patterns</h3>
             <div className="w-full grid grid-cols-2 gap-2">
                 <UtilsBtn>
                     <Preview img={pattern1} />
