@@ -10,6 +10,10 @@ img {
     user-drag: none;
 }
 
-.vanish__node {
-    @apply animate-vanish;
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.simplebar-scrollbar::before {
+  @apply bg-lightGray 
 }
