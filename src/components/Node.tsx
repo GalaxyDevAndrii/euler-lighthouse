@@ -1,55 +1,86 @@
-import React, { useEffect, useRef, useState } from "react";
-import Draggable, { DraggableEvent, DraggableEventHandler } from "react-draggable";
+import { useCallback, useEffect, useState, startTransition, createRef } from "react";
+import Draggable, { DraggableEventHandler } from "react-draggable";
+import { useXarrow } from "react-xarrows";
 
-import { connectNodes } from "../features/nodeHandler";
-import { useCursorPosition } from "../hooks/useCursorPosition";
+import { connectNodes, handleRemove } from "../features/nodeHandler";
 import { useExternalClick } from "../hooks/useExternalClick";
-import { useStore } from "../store/nodes";
-import { useStore as useUtilsStore } from "../store/utils";
-import { INode } from "../types/index";
-
-/* 
-export interface INode {
-    id: number;
-    posX: number;
-    posY: number;
-    isActive: boolean;
-    connectedTo: number[] | [];
-    domEl: HTMLElement | undefined;
-    updatePos: (pos: number[]) => void;
-    setElement: (el: HTMLElement) => void;
-    addConnection: (to: INode) => void;
-    removeConnection: (node: INode) => void;
-    clearConnections: () => void;
-}
-*/
+import useLongPress from "../hooks/useLongPress";
+import useOverlap from "../hooks/useOverlap";
+import { useTrackedStore } from "../store/nodes";
+import { useStore as useSettingsStore } from "../store/settings";
+import { useTrackedStore as useTracking } from "../store/tracking";
+import { useTrackedStore as useTrackedUtils } from "../store/utils";
+import { INode } from "../types";
+import { mutateTransform } from "../utils/tracking";
 
 interface Props {
     node: INode;
-    parent: HTMLDivElement | null;
-    update: () => void;
 }
 
-export default function Node({ node, parent, update }: Props) {
-    const { getNode, selectedNode, selectNode } = useStore((state) => state);
-    const { currEvent, gridMiddle, selectedTool, lineActive, setLineActive, sidebarRef } = useUtilsStore((state) => state);
+interface SVGprops {
+    setRef: any;
+    middleColor: string;
+    borderColor: string;
+    zoom: number;
+    size: number;
+    id: string;
+    className: string;
+}
 
-    const nodeRef = useRef(null);
-    const cursorPos = useCursorPosition();
-    const clickedOutside = useExternalClick(nodeRef, sidebarRef);
+function NodeSVG({ setRef, middleColor, borderColor, zoom, size, ...rest }: SVGprops) {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" ref={setRef} height={size} width={size} {...rest}>
+            <g transform={`scale(${zoom})`} className="pointer-events-none">
+                <path fill={middleColor} d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20Z" />
+                <path
+                    fill={borderColor}
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M24 41.5c9.665 0 17.5-7.835 17.5-17.5S33.665 6.5 24 6.5 6.5 14.335 6.5 24 14.335 41.5 24 41.5Zm0 2.5c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20Z"
+                />
+            </g>
+        </svg>
+    );
+}
 
-    const [size, setSize] = useState(2.5);
+export default function Node({ node }: Props) {
+    const { cameraZoom, cameraOffset } = useTracking();
+    const { getNode, selectedNode, selectNode } = useTrackedStore();
+    const { gridMiddle, selectedTool, lineActive, setLineActive, sidebarRef, toolbarRef, setIsAtSidebar } = useTrackedUtils();
+
+    const darkMode = useSettingsStore((state) => state.darkMode);
+
+    const [isDragging, setIsDragging] = useState(false);
+    const [size, setSize] = useState(48);
+
+    const nodeRef = createRef<HTMLElement>();
+
+    const clickedOutside = useExternalClick(nodeRef, sidebarRef, toolbarRef);
+    const isAtSidebar = useOverlap(nodeRef, sidebarRef);
+    const updateEdgesPos = useXarrow();
+
+    useLongPress({
+        element: nodeRef,
+        callback: () => {
+            node.changeType();
+        },
+    });
 
     useEffect(() => {
-        if (nodeRef.current) node.setElement(nodeRef.current);
-    }, [node]);
+        if (nodeRef.current) {
+            node.setElement(nodeRef.current);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nodeRef]);
 
     useEffect(() => {
-        const nodeSize = () => {
-            node.connectedTo.forEach(() => setSize((size) => size + 0.1));
+        const increaseSize = () => {
+            node.connectedTo.forEach(() => startTransition(() => setSize((size) => size + 0.1)));
         };
 
-        if (node.connectedTo.length > 1) nodeSize();
+        if (node.connectedTo.length > 1) {
+            increaseSize();
+        }
     }, [node.connectedTo]);
 
     useEffect(() => {
@@ -59,19 +90,42 @@ export default function Node({ node, parent, update }: Props) {
         }
     }, [clickedOutside, selectNode, setLineActive]);
 
-    const nodePositionHandler: DraggableEventHandler = (e: DraggableEvent | any): void => {
-        if (e) node.updatePos([e.clientX, e.clientY]);
+    useEffect(() => {
+        if (isDragging) {
+            setIsAtSidebar(isAtSidebar);
+        }
+    }, [isAtSidebar, isDragging, setIsAtSidebar]);
+
+    const isSelected = useCallback(() => {
+        return selectedNode?.id === node.id;
+    }, [node.id, selectedNode?.id]);
+
+    const deleteIfIsAtSidebar = (node: INode) => {
+        handleRemove(node);
+        setIsAtSidebar(false);
     };
 
-    const selectorHandler = (e: MouseEvent) => {
-        if (!e) return;
+    const positionHandler: DraggableEventHandler = (e): void => {
+        if (isAtSidebar && isDragging) {
+            deleteIfIsAtSidebar(node);
+        } else if (e instanceof MouseEvent) {
+            node.updatePos([e.clientX, e.clientY]);
+        } else if (e instanceof TouchEvent) {
+            node.updatePos([e.changedTouches[0].clientX, e.changedTouches[0].clientY]);
+        }
 
-        if (selectedTool === "selector") {
+        setIsDragging(false); // on stop event
+    };
+
+    const selectorHandler = useCallback(
+        (e: MouseEvent) => {
+            if (selectedTool !== "selector") return;
             const el = e.target as HTMLElement;
+
             const clickedNodeId = Number(el.id.slice(6, 100)); // id: node__1 => 1
             const clickedNode = getNode(clickedNodeId);
 
-            if (selectedNode && selectedNode.id !== clickedNodeId && lineActive) {
+            if (selectedNode?.id !== clickedNodeId && lineActive) {
                 connectNodes(selectedNode, clickedNode);
                 selectNode(undefined);
             }
@@ -79,13 +133,18 @@ export default function Node({ node, parent, update }: Props) {
             if (selectedNode?.id !== clickedNodeId) {
                 selectNode(clickedNode);
             } else {
-                selectNode(undefined);
+                selectNode(undefined); // deselect node if was clicked twice
             }
-        }
-    };
+        },
+        [getNode, lineActive, selectNode, selectedNode, selectedTool]
+    );
 
-    const drawLineHandler = (e: MouseEvent) => {
-        if (selectedTool === "selector") {
+    const interactionHandler = (e: MouseEvent) => {
+        if (selectedTool !== "selector") return;
+
+        if (e.button === 2) {
+            node.changeType();
+        } else {
             selectorHandler(e);
             setLineActive(true);
         }
@@ -93,28 +152,29 @@ export default function Node({ node, parent, update }: Props) {
 
     return (
         <Draggable
-            disabled={selectedTool === "selector" ? true : false}
-            defaultPosition={currEvent === "click" ? { ...gridMiddle } : { ...cursorPos }}
+            disabled={selectedTool === "selector"}
+            defaultPosition={gridMiddle}
             nodeRef={nodeRef}
-            offsetParent={parent && currEvent === "click" ? parent : undefined}
-            onDrag={update}
-            onStop={nodePositionHandler}
-            onMouseDown={drawLineHandler}
+            onMouseDown={interactionHandler}
+            onStart={() => setIsDragging(true)}
+            onDrag={updateEdgesPos}
+            onStop={positionHandler}
+            positionOffset={mutateTransform(cameraOffset, cameraZoom)}
             defaultClassNameDragging="ring will-change-transform"
-            bounds="parent"
         >
-            <div
-                ref={nodeRef}
-                // onDragStart={drawLineHandler}
-                role="radio"
-                draggable="false"
-                aria-checked={selectedNode ? true : false}
-                tabIndex={0}
+            <NodeSVG
+                setRef={nodeRef}
+                aria-grabbed={isDragging}
+                aria-checked={isSelected()}
                 id={`node__${node.id}`}
-                style={{ width: `${size}rem`, height: `${size}rem` }}
-                className={`select-none absolute transition-[height,width] z-10 w-10 h-10 bg-gray-200 border-4 border-black rounded-full
+                middleColor={darkMode ? "#232325" : "#dffff7"}
+                borderColor={node.type === "Initial" ? "green" : node.type === "Final" ? "red" : darkMode ? "white" : "black"}
+                zoom={cameraZoom}
+                size={size * cameraZoom}
+                className={`select-none absolute rounded-full z-40
                     ${selectedTool === "grab" ? "cursor-grab active:cursor-grabbing" : "hover:ring"}
-                    ${selectedNode?.id === node.id ? "ring ring-red-700" : ""}`}
+                    ${isSelected() ? "ring ring-red-700" : ""}
+                    `}
             />
         </Draggable>
     );
