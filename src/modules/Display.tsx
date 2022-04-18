@@ -1,59 +1,88 @@
-import React, { useRef, useEffect, memo } from "react";
-import { useXarrow, Xwrapper } from "react-xarrows";
+import { Fragment, useRef, useEffect, memo } from "react";
+import { toast } from "react-toastify";
+import ReactTooltip from "react-tooltip";
+import { Xwrapper } from "react-xarrows";
 
 import Edge from "../components/Edge";
 import GhostNode from "../components/GhostNode";
 import Node from "../components/Node";
 import { useStore } from "../store/nodes";
-import { useStore as useUtilsStore } from "../store/utils";
+import { useTrackedStore as useTrackedUtils } from "../store/utils";
 import { INode } from "../types";
 
-import Grid from "./Grid";
+import Canvas from "./Canvas";
 
 export default function Display() {
-    const { shouldDrawGrid, selectedTool, lineActive } = useUtilsStore((state) => state);
-    const { nodes, getNode, selectedNode } = useStore((state) => state);
-
-    const existingPairings = new Set<string>();
+    const { nodes, getNode } = useStore((state) => state);
+    const { selectedTool, setLineActive } = useTrackedUtils();
 
     const displayHandler = useRef<HTMLDivElement>(null);
-    const updateXarrow = useXarrow();
 
     useEffect(() => {
-        if (lineActive && selectedNode?.domEl) updateXarrow();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lineActive, selectedNode?.domEl]);
+        if (displayHandler?.current && nodes.length !== 0) {
+            // remove right click for better user experience
+            displayHandler.current.addEventListener("contextmenu", (event) => event.preventDefault());
+        }
+
+        if (nodes.length >= 100) {
+            toast.error("You have reached the maximum number of nodes.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    }, [displayHandler, nodes.length]);
+
+    // To check if there is a pair of edges and render a single one
+    const existingPairings = new Set<string>();
 
     // eslint-disable-next-line react/display-name
-    const EdgesRender = memo(({ node }: { node: INode }) => {
-        return node.connectedTo.length >= 1 ? (
+    const EdgesRender = memo(({ connectedTo, domEl }: { connectedTo: number[]; domEl: HTMLElement | undefined }) => {
+        return connectedTo.length >= 1 ? (
             <>
-                {node.connectedTo.map((to: number) => (
-                    <Edge key={getNode(to).id} from={node.domEl?.id ?? ""} to={getNode(to).domEl?.id ?? ""} existingPairings={existingPairings} />
+                {connectedTo.map((to: number) => (
+                    <Edge
+                        key={getNode(to).id}
+                        from={domEl?.id ?? ""}
+                        to={getNode(to).domEl?.id ?? ""}
+                        existingPairings={existingPairings}
+                    />
                 ))}
             </>
         ) : null;
     });
 
     return (
-        <section className="relative select-none bg-gray-300 w-full h-full overflow-hidden">
+        <section
+            aria-label="Display"
+            className="relative select-none w-full min-w-[400px] h-full overflow-hidden"
+            onMouseLeave={() => {
+                setLineActive(false);
+                ReactTooltip.rebuild(); // ReactTooltip bug, eventListeners not being added workaround
+            }}
+        >
             <div
                 ref={displayHandler}
-                className={`absolute w-full h-full left-0 top-0 overflow-auto touch-auto ${
+                className={`absolute w-full h-full left-0 top-0 overflow-hidden touch-auto ${
                     selectedTool === "grab" ? "cursor-grab active:cursor-grabbing" : ""
                 }`}
             >
-                {shouldDrawGrid && <Grid />}
+                <Canvas />
 
                 <Xwrapper>
                     {nodes.slice(0, 100).map((node: INode) => (
-                        <React.Fragment key={node.id}>
-                            <Node node={node} parent={displayHandler?.current} update={updateXarrow} />
+                        <Fragment key={node.id}>
+                            <Node node={node} />
 
-                            <EdgesRender node={node} />
-                        </React.Fragment>
+                            <EdgesRender connectedTo={node.connectedTo} domEl={node.domEl} />
+                        </Fragment>
                     ))}
-                    <GhostNode existingPairings={existingPairings} />
+
+                    {selectedTool === "selector" ? <GhostNode existingPairings={existingPairings} /> : null}
                 </Xwrapper>
             </div>
         </section>
