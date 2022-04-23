@@ -4,26 +4,52 @@
         <meta charset="utf-8" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <meta httpEquiv="Content-Language" content="en" />
-        <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
-
-        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
-        <title>Euler Lighthouse</title>
+        <title>Euler's Lighthouse</title>
+
         <meta name="description" content="" />
-        <meta property="og:title" content="Euler Lighthouse" />
-        <meta property="og:site_name" content="Euler Lighthouse" />
-        <meta property="og:type" content="website" />
-        <meta property="og:locale" content="en" />
-        <meta property="og:description" content="" />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="author" content="Rortan" />
+        <meta name="keywords" content="" />
+        <meta name="robots" content="index, follow" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
 
-        <meta name="author" content="Rortan134" />
-
-        <meta name="msapplication-TileColor" content="#10A37F" />
-        <meta name="theme-color" content="#10A37F" />
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
         <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
         <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+        <meta name="theme-color" content="#10A37F" />
+        <meta name="msapplication-TileColor" content="#10A37F" />
+
+        <meta name="apple-mobile-web-app-title" content="Euler's Lighthouse" />
+
+        <meta property="og:site_name" content="Euler's Lighthouse" />
+        <meta property="og:title" content="Euler's Lighthouse" />
+        <meta property="og:description" content="" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en" />
+        <meta property="og:image" content="" />
+
+        <meta name="twitter:title" content="Euler's Lighthouse" />
+        <meta name="twitter:description" content="" />
+        <meta name="twitter:creator" content="" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="" />
+
+        <script>
+            if (
+                localStorage.theme === "dark" ||
+                (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+            ) {
+                localStorage.setItem("theme", "dark");
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+            }
+        </script>
+
         <style>
             .loader,
             .loader:after {
