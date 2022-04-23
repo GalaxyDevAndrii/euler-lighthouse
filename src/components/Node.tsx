@@ -160,7 +160,7 @@ export default function Node({ node }: Props) {
             onDrag={updateEdgesPos}
             onStop={positionHandler}
             positionOffset={mutateTransform(cameraOffset, cameraZoom)}
-            defaultClassNameDragging="ring will-change-transform"
+            defaultClassNameDragging="ring"
         >
             <NodeSVG
                 setRef={nodeRef}
@@ -172,7 +172,7 @@ export default function Node({ node }: Props) {
                 zoom={cameraZoom}
                 size={size * cameraZoom}
                 className={`select-none absolute rounded-full z-40
-                    ${selectedTool === "grab" ? "cursor-grab active:cursor-grabbing" : "hover:ring"}
+                    ${selectedTool === "grab" ? "cursor-grab active:cursor-grabbing will-change-transform" : "hover:ring will-change-auto"}
                     ${isSelected() ? "ring ring-red-700" : ""}
                     `}
             />
