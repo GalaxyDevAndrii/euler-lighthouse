@@ -32,13 +32,33 @@ export default function usePan(ref: RefObject<HTMLElement | null>): [Point, (e: 
         });
     }, []);
 
+    const handleKeys = useCallback((e: KeyboardEvent) => {
+        switch (e.key) {
+            case "ArrowRight":
+                setPanState((panState) => ({ ...panState, x: panState.x - 10 }));
+                break;
+            case "ArrowLeft":
+                setPanState((panState) => ({ ...panState, x: panState.x + 10 }));
+                break;
+            case "ArrowUp":
+                setPanState((panState) => ({ ...panState, y: panState.y + 10 }));
+                break;
+            case "ArrowDown":
+                setPanState((panState) => ({ ...panState, y: panState.y - 10 }));
+                break;
+            default:
+                return;
+        }
+    }, []);
+
     // event listeners
     // todo: more readability
     const endPan = useCallback(() => {
         if (!ref.current) return;
         ref.current.removeEventListener("mousemove", pan as unknown as eventP);
         ref.current.removeEventListener("mouseup", endPan);
-    }, [ref, pan]);
+        ref.current.removeEventListener("keydown", handleKeys);
+    }, [ref, pan, handleKeys]);
 
     const startSwipe = useCallback(
         (e: TouchEvent) => {
@@ -64,7 +84,11 @@ export default function usePan(ref: RefObject<HTMLElement | null>): [Point, (e: 
             if (!ref.current) return;
             ref.current.addEventListener("mousemove", pan as unknown as eventP);
             ref.current.addEventListener("mouseup", endPan);
+
             ref.current.addEventListener("touchstart", startSwipe);
+            ref.current.addEventListener("touchend", endSwipe);
+
+            document.addEventListener("keydown", handleKeys);
 
             if (isTouchEvent(e)) {
                 lastPointRef.current = { x: e.touches[0].pageX, y: e.touches[0].pageY };
@@ -72,7 +96,7 @@ export default function usePan(ref: RefObject<HTMLElement | null>): [Point, (e: 
                 lastPointRef.current = { x: e.pageX, y: e.pageY };
             }
         },
-        [endPan, pan, ref, startSwipe]
+        [endPan, endSwipe, handleKeys, pan, ref, startSwipe]
     );
 
     return [panState, startPan];
