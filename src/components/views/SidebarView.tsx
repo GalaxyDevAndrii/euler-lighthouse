@@ -35,14 +35,16 @@ export default function SidebarView({ setActiveView }: { setActiveView: React.Di
     );
 
     const Explanation = () => (
-        <Disclosure as="div">
+        <Disclosure as="div" role="definition">
             {({ open }: { open: boolean }) => (
                 <>
                     <Disclosure.Button
                         as={UtilsBtn}
                         classNames="py-1.5 px-4 w-full flex items-center justify-between w-full !dark:bg-lightDark"
                     >
-                        <span className="text-base !font-medium dark:text-white">Explanation</span>
+                        <span className="text-base !font-medium dark:text-white" aria-label="Algorithm explanation">
+                            Explanation
+                        </span>
                         <DownArrow
                             className={`pointer-events-none transition fill-gray-500 group-hover:fill-black dark:group-hover:fill-white ${
                                 open ? "transform rotate-180" : ""

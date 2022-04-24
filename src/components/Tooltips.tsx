@@ -13,10 +13,11 @@ export default function Tooltips() {
         <>
             <ReactTooltip
                 id="tooltip"
-                delayShow={800}
+                delayShow={500}
                 type={darkMode ? "light" : "dark"}
                 effect="solid"
                 className="!px-2 !py-1"
+                globalEventOff="click"
                 getContent={(dataTip) => {
                     const textArr = dataTip?.split(", "); // [Text, keybind]
                     return textArr?.length == 2 ? (

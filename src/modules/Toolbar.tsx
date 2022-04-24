@@ -72,7 +72,6 @@ export default function Toolbar() {
                         }`}
                         data-for="tooltip"
                         data-tip="Drag Tool, H"
-                        data-multiline={true}
                     >
                         <DragIcon className="dark:fill-white" />
                     </div>
@@ -151,7 +150,9 @@ export default function Toolbar() {
             className={`fixed select-none top-0 right-0 h-12 z-10 transition-[width,padding] flex items-center justify-between dark:bg-mainDark ${
                 sidebarExpanded ? "w-[calc(100%-16rem)]" : "w-full pl-12 xs:pl-14 md:pl-16"
             }`}
+            role="toolbar"
             aria-label="Toolbar"
+            aria-orientation="horizontal"
         >
             <div className="flex items-center space-x-2 xs:space-x-4">
                 <InteractionSelectors />

@@ -11,7 +11,7 @@ export default function Layout() {
         <div className="h-full w-full overflow-hidden">
             <Toolbar />
             <Sidebar />
-            <div className={`${sidebarExpanded ? "pl-64" : "pl-0"} transition-[padding] pt-12 w-full h-full fixed`}>
+            <div role="application" className={`${sidebarExpanded ? "pl-64" : "pl-0"} transition-[padding] pt-12 w-full h-full fixed`}>
                 <Display />
             </div>
         </div>
