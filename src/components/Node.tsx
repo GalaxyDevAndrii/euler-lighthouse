@@ -11,37 +11,26 @@ import { useStore as useSettingsStore } from "../store/settings";
 import { useTrackedStore as useTracking } from "../store/tracking";
 import { useTrackedStore as useTrackedUtils } from "../store/utils";
 import { INode } from "../types";
+import { forwardRefWithAs } from "../utils/misc";
 import { mutateTransform } from "../utils/tracking";
 
 interface Props {
     node: INode;
 }
 
-interface SVGprops {
-    setRef: any;
-    middleColor: string;
-    borderColor: string;
-    zoom: number;
-    size: number;
-    id: string;
-    className: string;
-}
-
-function NodeSVG({ setRef, middleColor, borderColor, zoom, size, ...rest }: SVGprops) {
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" ref={setRef} height={size} width={size} {...rest}>
-            <g transform={`scale(${zoom})`} className="pointer-events-none">
-                <path fill={middleColor} d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20Z" />
-                <path
-                    fill={borderColor}
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M24 41.5c9.665 0 17.5-7.835 17.5-17.5S33.665 6.5 24 6.5 6.5 14.335 6.5 24 14.335 41.5 24 41.5Zm0 2.5c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20Z"
-                />
-            </g>
-        </svg>
-    );
-}
+const NodeSVG = forwardRefWithAs((props: any, ref: any) => (
+    <svg xmlns="http://www.w3.org/2000/svg" ref={ref} height={props.size} width={props.size} {...props}>
+        <g transform={`scale(${props.zoom})`} className="pointer-events-none">
+            <path fill={props.middleColor} d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20Z" />
+            <path
+                fill={props.borderColor}
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M24 41.5c9.665 0 17.5-7.835 17.5-17.5S33.665 6.5 24 6.5 6.5 14.335 6.5 24 14.335 41.5 24 41.5Zm0 2.5c11.046 0 20-8.954 20-20S35.046 4 24 4 4 12.954 4 24s8.954 20 20 20Z"
+            />
+        </g>
+    </svg>
+));
 
 export default function Node({ node }: Props) {
     const { cameraZoom, cameraOffset } = useTracking();
@@ -143,7 +132,7 @@ export default function Node({ node }: Props) {
         if (selectedTool !== "selector") return;
 
         if (e.button === 2) {
-            node.changeType();
+            // node.changeType();
         } else {
             selectorHandler(e);
             setLineActive(true);
@@ -151,31 +140,38 @@ export default function Node({ node }: Props) {
     };
 
     return (
-        <Draggable
-            disabled={selectedTool === "selector"}
-            defaultPosition={gridMiddle}
-            nodeRef={nodeRef}
-            onMouseDown={interactionHandler}
-            onStart={() => setIsDragging(true)}
-            onDrag={updateEdgesPos}
-            onStop={positionHandler}
-            positionOffset={mutateTransform(cameraOffset, cameraZoom)}
-            defaultClassNameDragging="ring"
-        >
-            <NodeSVG
-                setRef={nodeRef}
-                aria-grabbed={isDragging}
-                aria-checked={isSelected()}
-                id={`node__${node.id}`}
-                middleColor={darkMode ? "#232325" : "#dffff7"}
-                borderColor={node.type === "Initial" ? "green" : node.type === "Final" ? "red" : darkMode ? "white" : "black"}
-                zoom={cameraZoom}
-                size={size * cameraZoom}
-                className={`select-none absolute rounded-full z-40
-                    ${selectedTool === "grab" ? "cursor-grab active:cursor-grabbing will-change-transform" : "hover:ring will-change-auto"}
-                    ${isSelected() ? "ring ring-red-700" : ""}
-                    `}
-            />
-        </Draggable>
+        <>
+            <Draggable
+                disabled={selectedTool === "selector"}
+                defaultPosition={gridMiddle}
+                nodeRef={nodeRef}
+                onMouseDown={interactionHandler}
+                onStart={() => setIsDragging(true)}
+                onDrag={updateEdgesPos}
+                onStop={positionHandler}
+                positionOffset={mutateTransform(cameraOffset, cameraZoom)}
+                defaultClassNameDragging="ring"
+            >
+                <NodeSVG
+                    ref={nodeRef}
+                    aria-grabbed={isDragging}
+                    aria-checked={isSelected()}
+                    id={`node__${node.id}`}
+                    onContextMenu={(e: MouseEvent) => selectorHandler(e)}
+                    middleColor={darkMode ? "#232325" : "#dffff7"}
+                    borderColor={node.type === "Initial" ? "green" : node.type === "Final" ? "red" : darkMode ? "white" : "black"}
+                    zoom={cameraZoom}
+                    size={size * cameraZoom}
+                    className={`select-none absolute rounded-full z-40
+                        ${
+                            selectedTool === "grab"
+                                ? "cursor-grab active:cursor-grabbing will-change-transform"
+                                : "hover:ring will-change-auto"
+                        }
+                        ${isSelected() ? "ring ring-red-700" : ""}
+                        `}
+                />
+            </Draggable>
+        </>
     );
 }
