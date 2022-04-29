@@ -1,6 +1,6 @@
-import { RadioGroup, Transition, Switch } from "@headlessui/react";
-import { createRef, Fragment, useEffect, useRef } from "react";
-import ReactTooltip from "react-tooltip";
+import { RadioGroup, Switch } from "@headlessui/react";
+import { createRef, useEffect, useRef } from "react";
+// import ReactTooltip from "react-tooltip";
 
 import { ReactComponent as SelectorIcon } from "../assets/cursor.svg";
 import { ReactComponent as DragIcon } from "../assets/drag.svg";
@@ -9,24 +9,28 @@ import { ReactComponent as RemoveNodeIcon } from "../assets/node-minus.svg";
 import { ReactComponent as AddNodeIcon } from "../assets/node-plus.svg";
 import { ReactComponent as RunIcon } from "../assets/run.svg";
 import { ReactComponent as LightIcon } from "../assets/sun.svg";
+import FadeInOut from "../components/FadeInOut";
+import InfoBtn from "../components/InfoBtn";
 import SubtleBtn from "../components/SubtleBtn";
 import { handleRemove } from "../features/nodeHandler";
 import { useTrackedStore } from "../store/nodes";
+import { useStore as useOnboardStore } from "../store/onboarding";
 import { useStore as useSettingsStore } from "../store/settings";
 import { useTrackedStore as useTrackedUtils } from "../store/utils";
 
 export default function Toolbar() {
     const { clearNodes, addNode, selectedNode } = useTrackedStore();
     const { selectedTool, setTool, sidebarExpanded, setToolbarRef } = useTrackedUtils();
-    const { darkMode, toggleDarkMode } = useSettingsStore((state) => state);
+    const { darkMode, toggleDarkMode } = useSettingsStore();
+    const addRef = useOnboardStore((state) => state.addRef);
 
     const toolbarRef = useRef(null);
     const hintRef = createRef<HTMLElement>();
 
     useEffect(() => {
         if (toolbarRef.current) setToolbarRef(toolbarRef);
-        if (hintRef.current) ReactTooltip.show(hintRef.current);
-    }, [setToolbarRef, hintRef, toolbarRef]);
+        if (hintRef.current) addRef(hintRef);
+    }, [addRef, hintRef, setToolbarRef]);
 
     useEffect(() => {
         document.addEventListener("keydown", (e) => {
@@ -85,30 +89,14 @@ export default function Toolbar() {
             <SubtleBtn aria-label="Clear Nodes" onClick={clearNodes} classNames="px-2 dark:text-white">
                 Clear
             </SubtleBtn>
-            <SubtleBtn
-                setRef={hintRef}
-                title="Run"
-                aria-label="Run selected algorithm"
-                data-for="hint"
-                data-tip="You can click here to start the algorithm."
-                data-place="bottom"
-            >
+            <SubtleBtn setRef={hintRef} aria-label="Run selected algorithm" data-for="tooltip" data-tip="Run, L">
                 <RunIcon className="fill-contrast" />
             </SubtleBtn>
         </>
     );
 
     const NodeInteractionShortcuts = () => (
-        <Transition
-            show={!sidebarExpanded}
-            as={Fragment}
-            enter="transition ease-in duration-150"
-            leave="transition ease-in duration-150"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-        >
+        <FadeInOut active={!sidebarExpanded} enter leave>
             <div className="flex items-center space-x-2">
                 <SubtleBtn title="Add node" onClick={addNode} classNames="px-1.5">
                     <AddNodeIcon className="dark:fill-white" />
@@ -117,11 +105,11 @@ export default function Toolbar() {
                     <RemoveNodeIcon className="dark:fill-white" />
                 </SubtleBtn>
             </div>
-        </Transition>
+        </FadeInOut>
     );
 
     const DarkModeToggle = () => (
-        <div className="items-center hidden mini:flex mx-2 md:mx-4 space-x-2">
+        <div className="items-center hidden mini:flex space-x-2">
             <Switch
                 checked={darkMode}
                 onChange={toggleDarkMode}
@@ -159,7 +147,12 @@ export default function Toolbar() {
                 <NodeControls />
                 <NodeInteractionShortcuts />
             </div>
-            <DarkModeToggle />
+
+            <div className="flex flex-nowrap items-center justify-between mx-2 md:mx-4 space-x-4">
+                <SubtleBtn classNames="px-2 dark:text-white">Save</SubtleBtn>
+                <InfoBtn />
+                <DarkModeToggle />
+            </div>
         </header>
     );
 }
