@@ -4,7 +4,9 @@ import { ReactComponent as DownArrow } from "../../assets/down-arrow.svg";
 import { ReactComponent as SettingsSvg } from "../../assets/settings.svg";
 import { handleRemove } from "../../features/nodeHandler";
 import { useStore } from "../../store/nodes";
+import { useStore as useUtilsStore } from "../../store/utils";
 import { SidebarViews } from "../../types";
+import { isMobile } from "../../utils/misc";
 import Patterns from "../Patterns";
 import SelectMenu from "../SelectMenu";
 import UtilsBtn from "../UtilsBtn";
@@ -12,9 +14,14 @@ import UtilsBtn from "../UtilsBtn";
 export default function SidebarView({ setActiveView }: { setActiveView: React.Dispatch<React.SetStateAction<SidebarViews>> }) {
     const addNode = useStore((state) => state.addNode);
     const selectedNode = useStore((state) => state.selectedNode);
+    const toggleSidebar = useUtilsStore((state) => state.toggleSidebar);
 
     const handleClick = () => {
         addNode();
+
+        if (isMobile()) {
+            toggleSidebar();
+        }
     };
 
     const handleDrag = () => {

@@ -13,7 +13,7 @@ export default function Tooltips() {
         <>
             <ReactTooltip
                 id="tooltip"
-                delayShow={500}
+                delayShow={400}
                 type={darkMode ? "light" : "dark"}
                 effect="solid"
                 className="!px-2 !py-1"

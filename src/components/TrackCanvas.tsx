@@ -4,7 +4,6 @@ import {
     useLayoutEffect,
     cloneElement,
     useRef,
-    forwardRef,
     Children,
 
     // Types
@@ -22,13 +21,8 @@ import useZoom from "../hooks/useZoom";
 import { useTrackedStore as useTracking } from "../store/tracking";
 import { useTrackedStore as useTrackedUtils } from "../store/utils";
 import { sum, scale } from "../utils/math";
+import { forwardRefWithAs } from "../utils/misc";
 import { getDelta } from "../utils/tracking";
-
-function forwardRefWithAs<T extends { name: string; displayName?: string }>(component: T): T & { displayName: string } {
-    return Object.assign(forwardRef(component as unknown as any) as any, {
-        displayName: component.displayName ?? component.name,
-    });
-}
 
 const TrackCanvasRoot = forwardRefWithAs(function TrackCanvas(props: PropsWithChildren<unknown>, ref: RefObject<HTMLDivElement>) {
     const { setCameraOffset, setZoomOffset, setBuffer } = useTracking();
