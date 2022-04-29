@@ -3,6 +3,7 @@ import { createTrackedSelector } from "react-tracked";
 import create, { SetState, State } from "zustand";
 
 import { Directions, Tools } from "../types";
+import { isMobile } from "../utils/misc";
 
 interface IUtilsState extends State {
     gridMiddle: { x: number; y: number };
@@ -25,32 +26,51 @@ interface IUtilsState extends State {
 
     isAtSidebar: boolean;
     setIsAtSidebar: (newState: boolean) => void;
+
+    backdropActive: boolean;
+    toggleBackdrop: (state: boolean) => void;
 }
 
 export const useStore = create<IUtilsState>((set: SetState<IUtilsState>) => ({
     gridMiddle: { x: 0, y: 0 },
-    setMiddle: (direction: Directions, newState: number) =>
-        set((oldState) => ({ gridMiddle: { ...oldState.gridMiddle, [direction]: newState } })),
+    setMiddle: (direction: Directions, newState: number) => {
+        set((oldState) => ({ gridMiddle: { ...oldState.gridMiddle, [direction]: newState } }));
+    },
 
     selectedTool: "selector",
-    setTool: (tool: Tools) => set({ selectedTool: tool }),
+    setTool: (tool: Tools) => {
+        set({ selectedTool: tool });
+    },
 
     lineActive: false,
-    setLineActive: (state: boolean) => set({ lineActive: state }),
+    setLineActive: (state: boolean) => {
+        set({ lineActive: state });
+    },
 
-    sidebarExpanded: !/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
-        navigator.userAgent
-    ), // if is mobile, start with the sidebar retracted
-    toggleSidebar: () => set((state) => ({ sidebarExpanded: !state.sidebarExpanded })),
+    sidebarExpanded: !isMobile(), // if is mobile, start with the sidebar retracted
+    toggleSidebar: () => {
+        set((state) => ({ sidebarExpanded: !state.sidebarExpanded }));
+    },
 
     toolbarRef: undefined,
-    setToolbarRef: (ref) => set({ toolbarRef: ref }),
+    setToolbarRef: (ref) => {
+        set({ toolbarRef: ref });
+    },
 
     sidebarRef: undefined,
-    setSidebarRef: (ref) => set({ sidebarRef: ref }),
+    setSidebarRef: (ref) => {
+        set({ sidebarRef: ref });
+    },
 
     isAtSidebar: false,
-    setIsAtSidebar: (state: boolean) => set({ isAtSidebar: state }),
+    setIsAtSidebar: (state: boolean) => {
+        set({ isAtSidebar: state });
+    },
+
+    backdropActive: false,
+    toggleBackdrop: (state: boolean) => {
+        set({ backdropActive: state });
+    },
 }));
 
 export const useTrackedStore = createTrackedSelector(useStore);
