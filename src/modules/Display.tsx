@@ -1,8 +1,9 @@
-import { Fragment, useRef, useEffect, memo } from "react";
+import { Fragment, useEffect, memo } from "react";
 import { toast } from "react-toastify";
 import ReactTooltip from "react-tooltip";
 import { Xwrapper } from "react-xarrows";
 
+import ContextMenu from "../components/ContextMenu";
 import Edge from "../components/Edge";
 import GhostNode from "../components/GhostNode";
 import Node from "../components/Node";
@@ -17,14 +18,7 @@ export default function Display() {
     const { nodes, getNode } = useStore((state) => state);
     const { selectedTool, setLineActive } = useTrackedUtils();
 
-    const displayHandler = useRef<HTMLDivElement>(null);
-
     useEffect(() => {
-        if (displayHandler?.current && nodes.length !== 0) {
-            // remove right click for better user experience
-            displayHandler.current.addEventListener("contextmenu", (event) => event.preventDefault());
-        }
-
         if (nodes.length >= NODE_LIMIT) {
             toast.error("You have reached the maximum number of nodes.", {
                 position: "top-right",
@@ -36,7 +30,7 @@ export default function Display() {
                 progress: undefined,
             });
         }
-    }, [displayHandler, nodes.length]);
+    }, [nodes.length]);
 
     // To check if there is a pair of edges and render a single one
     const existingPairings = new Set<string>();
@@ -66,26 +60,26 @@ export default function Display() {
                 ReactTooltip.rebuild(); // ReactTooltip bug, eventListeners not being added workaround
             }}
         >
-            <div
-                ref={displayHandler}
-                className={`absolute w-full h-full left-0 top-0 overflow-hidden touch-auto ${
-                    selectedTool === "grab" ? "cursor-grab active:cursor-grabbing" : ""
-                }`}
-            >
-                <Canvas />
+            <ContextMenu>
+                <div
+                    className={`absolute w-full h-full left-0 top-0 overflow-hidden touch-auto ${
+                        selectedTool === "grab" ? "cursor-grab active:cursor-grabbing" : ""
+                    }`}
+                >
+                    <Canvas />
+                    <Xwrapper>
+                        {nodes.slice(0, NODE_LIMIT).map((node: INode) => (
+                            <Fragment key={node.id}>
+                                <Node node={node} />
 
-                <Xwrapper>
-                    {nodes.slice(0, NODE_LIMIT).map((node: INode) => (
-                        <Fragment key={node.id}>
-                            <Node node={node} />
+                                <EdgesRender connectedTo={node.connectedTo} domEl={node.domEl} />
+                            </Fragment>
+                        ))}
 
-                            <EdgesRender connectedTo={node.connectedTo} domEl={node.domEl} />
-                        </Fragment>
-                    ))}
-
-                    {selectedTool === "selector" ? <GhostNode existingPairings={existingPairings} /> : null}
-                </Xwrapper>
-            </div>
+                        {selectedTool === "selector" ? <GhostNode existingPairings={existingPairings} /> : null}
+                    </Xwrapper>
+                </div>
+            </ContextMenu>
         </section>
     );
 }
