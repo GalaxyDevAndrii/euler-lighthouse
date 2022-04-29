@@ -5,6 +5,7 @@
     "dependencies": {
         "@headlessui/react": "^1.6.0",
         "@rive-app/react-canvas": "^3.0.1",
+        "@szhsin/react-menu": "^3.0.0",
         "react": "^18.1.0",
         "react-dom": "^18.1.0",
         "react-draggable": "^4.4.5",
