@@ -24,7 +24,7 @@ module.exports = {
             return babelLoaderOptions;
         },
     },
-    // if you want to track react-redux selectors
+
     webpack: {
         alias: {},
     },
