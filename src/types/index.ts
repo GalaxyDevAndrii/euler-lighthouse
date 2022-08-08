@@ -6,7 +6,7 @@ export enum Algorithms {
 
 export const NodeTypesArr = ["Initial", "Final", "Normal"] as const;
 
-export type AlgorithmsT = Algorithms.tour | Algorithms.walk;
+export type TAlgorithms = Algorithms.tour | Algorithms.walk | Algorithms.trail;
 
 export type NodeTypes = typeof NodeTypesArr[number];
 
@@ -18,13 +18,13 @@ export type CurrentEvent = "click" | "drag" | undefined;
 
 export type Tools = "selector" | "grab";
 
-export type CreateNode = (nodes: Nodes) => INode;
+export type CreateNode = (nodes: Nodes, position: Point, type?: NodeTypes, edges?: number[]) => INode;
 
 export type ConnectNodes = (node1: INode | undefined, node2: INode | undefined) => void;
 
-export type Directions = "x" | "y";
+export type SidebarViews = "SidebarView" | "SettingsView";
 
-export type SidebarViews = "SidebarView" | "SettingsView" | "AboutView";
+export type BoxBoundingPos = { top: number; left: number; width: number; height: number };
 
 export type DraggableEvent =
     | React.MouseEvent<HTMLElement | SVGElement>
@@ -48,6 +48,6 @@ export interface INode {
     removeConnection: (nodeId: number) => void;
     clearConnections: () => void;
 
-    changeType: () => NodeTypes;
-    animate: (animation: Keyframe[] | PropertyIndexedKeyframes, options: number | KeyframeAnimationOptions) => void;
+    changeType: (type?: NodeTypes) => NodeTypes;
+    animate: (animation: Keyframe[] | PropertyIndexedKeyframes, options: KeyframeAnimationOptions | number) => void;
 }
