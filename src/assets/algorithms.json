@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Euler Tour",
+        "description": "Also called, eulerian circuit, or cycle, starts and ends at the same graph vertex, which means it uses each graph edge (degrees) exactly once",
+        "requirements": ["All vertices with non-zero degree are connected", "All vertices have even degree"],
+        "sourceURL": "https://en.wikipedia.org/wiki/Euler_tour_technique"
+    },
+    {
+        "name": "Euler Trail",
+        "description": "The Eulerian Trail (also called Eulerian Path) is a path in a finite graph that visits every edge exactly once. The path may be started and ended at different graph vertices",
+        "requirements": ["Every vertex should have an even degree or only two vertices should have odd degrees."],
+        "sourceURL": "https://en.wikipedia.org/wiki/Eulerian_path"
+    },
+    {
+        "name": "Euler Walk",
+        "description": "Hello world2",
+        "requirements": "",
+        "sourceURL": ""
+    }
+]

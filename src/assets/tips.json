@@ -1,0 +1,14 @@
+[
+    {
+        "illustration": "six-degrees.svg",
+        "content": "The minimum distance between any two people in the world is popularly believed to be 6 or less, this is called the &quot;six degrees of separation&quot;."
+    },
+    {
+        "illustration": "math-graph.svg",
+        "content": "In any cluster of people, at least two people have the same number of friends. <br/> -Graph Theory"
+    },
+    {
+        "illustration": "mathematics.svg",
+        "content": "Euler is considered to be the most important mathematician of the 18th century."
+    }
+]
