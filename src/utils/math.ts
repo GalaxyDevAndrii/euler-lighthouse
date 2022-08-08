@@ -13,5 +13,13 @@ export const sum = (a: Point, b: Point): Point => {
 };
 
 export const scale = (values: Point, factor: number): Point => {
-    return { x: values.x * factor, y: values.y * factor };
+    return { x: values.x / factor, y: values.y / factor };
+};
+
+export const revertValues = (obj: Point): Point => {
+    return { x: -obj.x, y: -obj.y };
+};
+
+export const isEven = (num: number): boolean => {
+    return num % 2 === 0;
 };

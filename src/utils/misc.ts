@@ -9,3 +9,17 @@ export function forwardRefWithAs<T extends { name: string; displayName?: string 
 export function isMobile(): boolean {
     return /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(navigator.userAgent);
 }
+
+export function isNull(obj: Record<string, unknown>): boolean {
+    return Object.values(obj).some((value) => {
+        if (value === null) {
+            return true;
+        }
+
+        return false;
+    });
+}
+
+export const isObject = (object: any): boolean => {
+    return object != null && typeof object === "object";
+};
