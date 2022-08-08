@@ -15,6 +15,10 @@ module.exports = {
                 react: { version: "detect" },
                 "import/resolver": {
                     typescript: {},
+                    alias: {
+                        map: [["@", "./src"]],
+                        extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+                    },
                 },
             },
             env: {
@@ -65,11 +69,11 @@ module.exports = {
 
                 "@typescript-eslint/no-unused-vars": ["warn"],
 
+                "@typescript-eslint/no-var-requires": "warn",
                 "@typescript-eslint/explicit-function-return-type": ["off"],
                 "@typescript-eslint/explicit-module-boundary-types": ["off"],
-                "@typescript-eslint/no-empty-function": ["warn"],
+                "@typescript-eslint/no-empty-function": ["off"],
                 "@typescript-eslint/no-explicit-any": ["off"],
-                "@typescript-eslint/no-var-requires": "warn",
 
                 "prettier/prettier": ["warn", {}, { usePrettierrc: true }],
             },
