@@ -1,7 +1,7 @@
-import create, { SetState, GetState, State } from "zustand";
+import create from "zustand";
 import { persist } from "zustand/middleware";
 
-interface ISettingsState extends State {
+interface ISettingsState {
     shouldDrawGrid: boolean;
     setDrawGrid: (newState: boolean) => void;
     darkMode: boolean;
@@ -10,12 +10,11 @@ interface ISettingsState extends State {
 
 export const useStore = create(
     persist<ISettingsState>(
-        (set: SetState<ISettingsState>, get: GetState<ISettingsState>) => ({
+        (set, get) => ({
             shouldDrawGrid: true,
             setDrawGrid: (newState: boolean) => {
                 set({ shouldDrawGrid: newState });
             },
-
             darkMode: localStorage.theme === "dark",
             toggleDarkMode: () => {
                 set((state) => ({ darkMode: !state.darkMode }));
