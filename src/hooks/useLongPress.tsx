@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from "react";
+import { useState, useEffect, RefObject } from "react";
 
 /**
  * callback on long mobile press
@@ -8,51 +8,52 @@ import { RefObject, useEffect } from "react";
  *   });
  */
 
-interface Props {
+interface UseLongPressParams {
     element: RefObject<HTMLElement>;
     callback: () => void;
 }
 
-export default function useLongPress({ element, callback }: Props) {
+type UseLongPressReturnType = {
+    isPressing: boolean;
+};
+
+type Timer = ReturnType<typeof setTimeout> | null;
+
+const LONG_PRESS_TIMEOUT = 500; // in ms
+
+export default function useLongPress({ element, callback }: UseLongPressParams): UseLongPressReturnType {
+    const [isBeingPressed, setIsBeingPressed] = useState(false);
+
     useEffect(() => {
-        if (!element.current) return;
+        const el = element?.current;
 
-        const el = element.current;
+        if (!el) {
+            return;
+        }
 
-        let timer: ReturnType<typeof setTimeout> | any;
-
-        el.addEventListener("touchstart", () => {
-            timer = setTimeout(() => {
-                timer = null;
-                callback();
-            }, 500); // hold for longer than 500ms
-        });
+        let timer: Timer;
+        el.addEventListener(
+            "touchstart",
+            () => {
+                setIsBeingPressed(true);
+                timer = setTimeout(() => {
+                    timer = null;
+                    callback();
+                    setIsBeingPressed(false);
+                }, LONG_PRESS_TIMEOUT);
+            },
+            { passive: true }
+        );
 
         function cancel() {
-            clearTimeout(timer);
+            if (timer) {
+                clearTimeout(timer);
+            }
         }
 
         el.addEventListener("touchend", cancel);
-        el.addEventListener("touchmove", cancel);
+        el.addEventListener("touchmove", cancel, { passive: true });
     }, [callback, element]);
+
+    return { isPressing: isBeingPressed };
 }
-
-/* 
-function onLongPress(element, callback) {
-  let timer;
-
-  element.addEventListener('touchstart', () => { 
-    timer = setTimeout(() => {
-      timer = null;
-      callback();
-    }, 500);
-  });
-
-  function cancel() {
-    clearTimeout(timer);
-  }
-
-  element.addEventListener('touchend', cancel);
-  element.addEventListener('touchmove', cancel);
-}
-*/

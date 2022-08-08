@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 
 /**
- * Use last state
+ * Use previous state
  */
 
-export default function useLast(lastValue: any) {
+export default function useLast<T>(lastValue: T) {
     const [last, setLast] = useState(lastValue);
 
     useEffect(() => {

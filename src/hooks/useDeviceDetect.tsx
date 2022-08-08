@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
  * Return true if is a mobile device
  */
 
-const MIN_DEVICE_WIDTH = 768;
+const MIN_DEVICE_WIDTH = 1024;
 
 const useDeviceDetect = () => {
     const [width, setWidth] = useState(window.innerWidth);

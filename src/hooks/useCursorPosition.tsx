@@ -1,13 +1,18 @@
 import { RefObject, useEffect, useState } from "react";
 
 import { ORIGIN } from "../config";
-import { DraggableEvent } from "../types";
+import type { DraggableEvent, Point } from "../types";
 
 /**
  * Cursor coordinates
  */
 
-export function useCursorPosition(ref?: RefObject<HTMLElement> | null, offset?: { x: number; y: number }): { x: number; y: number } {
+type UseCursorPositionParams = {
+    ref?: RefObject<HTMLElement> | null;
+    offset?: Point;
+};
+
+export function useCursorPosition({ ref, offset }: UseCursorPositionParams): Point {
     const [position, setPosition] = useState(ORIGIN);
 
     useEffect(() => {
@@ -23,12 +28,16 @@ export function useCursorPosition(ref?: RefObject<HTMLElement> | null, offset?: 
 
         if (ref?.current) {
             ref.current.addEventListener("mousemove", setFromEvent);
+            // ref.current.addEventListener("wheel", setFromEvent);
             refStore = ref;
-        } else window.addEventListener("mousemove", setFromEvent);
+        } else {
+            window.addEventListener("mousemove", setFromEvent);
+        }
 
         return () => {
             if (refStore?.current) {
                 refStore.current.removeEventListener("mousemove", setFromEvent);
+                // refStore.current.removeEventListener("wheel", setFromEvent);
             } else {
                 window.removeEventListener("mousemove", setFromEvent);
             }

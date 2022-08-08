@@ -1,13 +1,25 @@
-import { useStore as useUtilsStore } from "../store/utils";
+import { ReactNode } from "react";
 
 import FadeInOut from "./FadeInOut";
 
-export default function Backdrop({ clickCallback }: { clickCallback?: () => void }) {
-    const backdropActive = useUtilsStore((state) => state.backdropActive);
+interface IBackdropProps {
+    active: boolean;
+    children: ReactNode | ReactNode[];
+    clickCallback?: () => void;
+    classNames?: string;
+}
 
+export default function Backdrop({ children, active = false, clickCallback = () => {}, classNames = "" }: IBackdropProps) {
     return (
-        <FadeInOut active={backdropActive} enter leave>
-            <div className="absolute h-full w-full bg-black/20 dark:bg-black/40 z-40" onClick={clickCallback} role="presentation" />
+        <FadeInOut active={active} enter leave>
+            <div
+                aria-hidden="true"
+                className={`h-full w-full absolute top-0 left-0 bg-black/10 dark:bg-black/40 z-40 ${classNames}`}
+                onClick={() => clickCallback()}
+                role="presentation"
+            >
+                {children}
+            </div>
         </FadeInOut>
     );
 }

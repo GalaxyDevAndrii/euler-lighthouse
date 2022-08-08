@@ -1,13 +1,14 @@
-import { RefObject, useEffect } from "react";
+import { useEffect, RefObject } from "react";
 
 export default function useEventListener<K extends keyof GlobalEventHandlersEventMap>(
     ref: RefObject<HTMLElement | null>,
     event: K,
     listener: (event: GlobalEventHandlersEventMap[K]) => void,
-    options?: boolean | AddEventListenerOptions
+    options?: boolean | AddEventListenerOptions,
+    window?: Window
 ) {
     useEffect(() => {
-        const node = ref.current;
+        const node = ref?.current;
 
         if (!node) {
             return;
@@ -15,8 +16,8 @@ export default function useEventListener<K extends keyof GlobalEventHandlersEven
 
         const listenerWrapper = ((e: GlobalEventHandlersEventMap[K]) => listener(e)) as EventListener;
 
-        node.addEventListener(event, listenerWrapper, options);
+        (window ?? node).addEventListener(event, listenerWrapper, options);
 
         return () => node.removeEventListener(event, listenerWrapper);
-    }, [ref, event, listener, options]);
+    }, [ref, event, listener, options, window]);
 }

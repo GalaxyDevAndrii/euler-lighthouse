@@ -1,18 +1,24 @@
 import { Transition } from "@headlessui/react";
 import { Fragment, ReactNode } from "react";
 
-interface Props {
+interface IFadeInOutProps {
     children: ReactNode | ReactNode[];
     active?: boolean;
     enter?: boolean;
     leave?: boolean;
+    shouldUnmount?: boolean;
 }
 
-export default function FadeInOut({ children, active = true, enter, leave }: Props) {
+/**
+ * Headlessui Transition component abstraction, wraps child
+ */
+
+export default function FadeInOut({ children, active = true, enter, leave, shouldUnmount = true }: IFadeInOutProps) {
     return (
         <Transition
             show={active}
             as={Fragment}
+            unmount={shouldUnmount}
             {...(enter
                 ? {
                       enter: "transition ease-in duration-150",
