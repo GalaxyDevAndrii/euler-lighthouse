@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    /* focus accessibility */
+    .focus-acc {
+        @apply focus:border-secondaryTheme focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-primaryTheme focus-visible:ring-offset-1 focus-visible:border-primaryTheme;
+    }
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+body,
+html {
+    height: 100%;
+    width: 100%;
+}
+
 img {
     -webkit-user-drag: none;
     -khtml-user-drag: none;
@@ -10,10 +27,38 @@ img {
     user-drag: none;
 }
 
-* {
-    -webkit-tap-highlight-color: transparent;
+.simplebar-track.simplebar-vertical {
+    @apply w-2;
+}
+
+.simplebar-track.simplebar-horizontal {
+    @apply h-2;
 }
 
 .simplebar-scrollbar::before {
-  @apply bg-lightGray 
+    @apply bg-secondaryGray/20;
+}
+
+.szh-menu__submenu > .szh-menu__item {
+    @apply px-4;
+}
+
+.title-default {
+    @apply text-primaryText text-base font-medium dark:text-white;
+}
+
+.btn-default {
+    @apply text-primaryText rounded-md bg-tertiaryTheme/75 hover:bg-tertiaryTheme active:bg-tertiaryTheme dark:text-white;
+}
+
+.triangleLoader {
+    stroke-dasharray: 17;
+    @apply stroke-primaryText;
+}
+
+.line-clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
