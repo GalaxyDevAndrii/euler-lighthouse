@@ -89,7 +89,9 @@ export default function Feedback() {
         <div className="flex items-center justify-center !mb-12 h-72">
             <FadeInOut active={isShowing} enter leave>
                 {!hasFinishedTutorial ? (
-                    <OnboardMessageComponent />
+                    <div className="h-fit w-full">
+                        <OnboardMessageComponent />
+                    </div>
                 ) : (
                     <div className="w-full h-fit flex flex-col items-center justify-center">
                         {Array.from(tips)[activeTipIndex] && (
