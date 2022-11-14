@@ -16,7 +16,7 @@ const DFSUtil = (v: number, visited: boolean[], adj: number[][]) => {
 };
 
 // Method to check if all non-zero degree vertices are
-// connected. It mainly does DFS traversal starting from
+// connected. It mainly does DFS traversal
 const isConnected = (v: number, adj: number[][]) => {
     // Mark all the vertices as not visited
     const visited = new Array(v);
