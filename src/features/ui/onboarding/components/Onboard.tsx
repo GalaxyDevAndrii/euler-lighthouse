@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import ReactTooltip from "react-tooltip";
 
-import UtilsBtn from "../../../components/UtilityBtn";
-import { useStore as useOnboardStore } from "../../../stores/onboarding";
-import { useStore as useSettingsStore } from "../../../stores/settings";
+import UtilsBtn from "../../../../components/UtilityBtn";
+import { useStore as useOnboardStore } from "../../../../stores/onboarding";
+import { useStore as useSettingsStore } from "../../../../stores/settings";
 
 import WelcomeModal from "./WelcomeModal";
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ReactTooltip from "react-tooltip";
 
-import { useStore as useSettingsStore } from "../../../stores/settings";
+import { useStore as useSettingsStore } from "../../../../stores/settings";
 
 export default function TutorialTip() {
     const darkMode = useSettingsStore((state) => state.darkMode);
