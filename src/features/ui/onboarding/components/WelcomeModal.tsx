@@ -2,13 +2,13 @@ import { Dialog } from "@headlessui/react";
 import Rive from "@rive-app/react-canvas";
 import { useEffect } from "react";
 
-import Backdrop from "../../../components/Backdrop";
-import UtilsBtn from "../../../components/UtilityBtn";
-import { useStore as useOnboardStore } from "../../../stores/onboarding";
-import { useStore as useUtilsStore } from "../../../stores/utils";
+import Backdrop from "../../../../components/Backdrop";
+import UtilsBtn from "../../../../components/UtilityBtn";
+import { useStore as useOnboardStore } from "../../../../stores/onboarding";
+import { useStore as useUtilsStore } from "../../../../stores/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const anim = require("../../../assets/euler_lighthouse.riv");
+const anim = require("../../../../assets/euler_lighthouse.riv");
 
 export default function WelcomeModal() {
     const nextStep = useOnboardStore((state) => state.nextStep);

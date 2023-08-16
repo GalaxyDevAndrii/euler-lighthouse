@@ -1,7 +1,7 @@
 import Tooltip from "../components/Tooltip";
 import { Display } from "../features/display";
-import { Onboard } from "../features/onboarding";
 import { Footer } from "../features/ui/footer";
+import { Onboard } from "../features/ui/onboarding";
 
 import KeyboardShortcuts from "./KeyboardShortcuts";
 import LayoutProvider from "./Layout";
