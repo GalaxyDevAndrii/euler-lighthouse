@@ -69,7 +69,7 @@ export default function Feedback() {
     };
 
     const OnboardMessageComponent = () => (
-        <div className="w-full h-fit flex flex-col items-center justify-center">
+        <>
             <div className="basis-1/2 p-6 select-none">
                 <OnboardIllustration className="w-full h-28" />
             </div>
@@ -82,14 +82,16 @@ export default function Feedback() {
                     Add Node
                 </button>
             </div>
-        </div>
+        </>
     );
 
     return (
         <div className="flex items-center justify-center !mb-12 h-72">
             <FadeInOut active={isShowing} enter leave>
                 {!hasFinishedTutorial ? (
-                    <OnboardMessageComponent />
+                    <div className="w-full h-fit flex flex-col items-center justify-center">
+                        <OnboardMessageComponent />
+                    </div>
                 ) : (
                     <div className="w-full h-fit flex flex-col items-center justify-center">
                         {Array.from(tips)[activeTipIndex] && (
